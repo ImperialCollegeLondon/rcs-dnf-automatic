@@ -4,8 +4,7 @@
 
 #Warning message every 10 minutes, then 5 minutes, then 1 minute
 count_down=3600
-steps="600 600 600 600 600 300 240"
-for step in "${steps}"; do
+for step in 600 600 600 600 600 300 240 ; do
     wall "This system will go down for updates in ${count_down} seconds, please save all work and logout. All users will be disconnected during the update."
     sleep ${step}
     count_down=$(( count_down - step ))
