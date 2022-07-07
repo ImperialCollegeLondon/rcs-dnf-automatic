@@ -2,20 +2,22 @@
 # To update GPFS we need to kick everyone off of the node and then restart GPFS
 # There will be a 1 hour count down before all user procceses are killed 
 
-count_down=36
-step=6
-while [ ${count_down} -gt 0 ] ; do
+#Warning message every 10 minutes, then 5 minutes, then 1 minute
+count_down=3600
+steps="600 600 600 600 600 300 240"
+for step in "${steps}"; do
     wall "This system will go down for updates in ${count_down} seconds, please save all work and logout. All users will be disconnected during the update."
     sleep ${step}
     count_down=$(( count_down - step ))
 done
 
-#Kill user processes
-for user in $(who -q | head -1 | sort -u | grep -v root); do 
-    echo "pkill -u ${user}"; 
+#Kill user processes and revent login
+for user in $(who -q | head -1 | sort -u); do 
+    if [[ "${user}" != "root" ]] ; then
+        pkill -u "${user}" 
+    fi
 done
-
-#echo "System is currently being updated. Please try again in a few minutes" > /etc/nologin
+echo "System is currently being updated. Please try again in a few minutes" > /etc/nologin
 
 #Connections to RDS will need to be off for Kernal updates
 /usr/lpp/mmfs/bin/mmshutdown
