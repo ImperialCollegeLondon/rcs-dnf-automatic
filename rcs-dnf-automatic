@@ -5,10 +5,11 @@
 count_down=36
 step=6
 while [ ${count_down} -gt 0 ] ; do
-    echo "This system will do down for updates in ${count_down} seconds, please save all work and logout. All users will be disconnected during the update."
+    wall "This system will go down for updates in ${count_down} seconds, please save all work and logout. All users will be disconnected during the update."
     sleep ${step}
     count_down=$(( count_down - step ))
 done
+
 #Kill user processes
 for user in $(who -q | head -1 | sort -u | grep -v root); do 
     echo "pkill -u ${user}"; 
@@ -18,6 +19,7 @@ done
 
 #Connections to RDS will need to be off for Kernal updates
 /usr/lpp/mmfs/bin/mmshutdown
+sleep 10
 
 #Run updates respecting the settings in automatic.conf
 /usr/bin/dnf-automatic /etc/dnf/automatic.conf
