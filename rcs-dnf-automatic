@@ -37,6 +37,6 @@ sleep 60
 #Only let the users back in if RDS has been able to mount user home directories
 if [[ $(systemctl check gpfs) == "active" ]] ; then 
     if [[ -d /rds/general/user ]] ; then 
-        echo "beep"; 
+        rm -f /etc/nologin
     fi
 fi
